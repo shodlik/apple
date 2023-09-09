@@ -75,15 +75,25 @@ class AppleList extends \yii\db\ActiveRecord
 
     public function saveRandom(){
         $this->color = $this->getRandomColor();
-        $this->date_appearance = $this->randomDateInRange();
-        $this->status = array_rand([self::STATUS_AT_TREE,self::STATUS_FALL,self::STATUS_ROTTEN]);
+        $this->date_appearance = $this->randomDateInRange("-1 month");
+        $this->date_fall = $this->randomDateInRange("-10 hour");
+        $this->status = $this->getRandomStatus();
         return $this->save();
     }
 
-    private function randomDateInRange() {
-        $start = strtotime(date("y-m-d",strtotime("-1 month")));
+    private function randomDateInRange($begin) {
+        $start = strtotime(date("Y-m-d",strtotime($begin)));
         $end = strtotime(date("Y-m-d H:i:s"));
         $randomTimestamp = mt_rand($start, $end);
         return date("Y-m-d H:i:s",$randomTimestamp);
+    }
+
+    public function getRandomStatus(){
+        $fallAt = new \DateTime($this->date_fall);
+        $hoursOfFall = $fallAt->diff(new \DateTime())->h;
+        if ($hoursOfFall > 5) {
+            return self::STATUS_ROTTEN;
+        }
+        return array_rand([self::STATUS_AT_TREE,self::STATUS_FALL,self::STATUS_ROTTEN]);
     }
 }

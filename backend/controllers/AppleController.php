@@ -41,7 +41,7 @@ class AppleController extends Controller
     {
         $searchModel = new AppleListSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
+        $dataProvider->query->orderBy("id DESC");
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
