@@ -2,8 +2,10 @@
 
 namespace backend\controllers;
 
+use backend\Apple;
 use common\models\AppleList;
 use common\models\AppleListSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -18,17 +20,29 @@ class AppleController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index','create'],
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -67,19 +81,11 @@ class AppleController extends Controller
      */
     public function actionCreate()
     {
-        $model = new AppleList();
+        $count = mt_rand(1, 10);
+        for ($i = 0; $i < $count; $i++) {
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return  $this->redirect(\Yii::$app->response->refresh());
     }
 
     /**

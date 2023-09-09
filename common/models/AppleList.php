@@ -13,6 +13,7 @@ use Yii;
  * @property int|null $status
  * @property float|null $eat
  * @property int|null $is_delete
+ * @property string|null $color
  */
 class AppleList extends \yii\db\ActiveRecord
 {
@@ -33,6 +34,7 @@ class AppleList extends \yii\db\ActiveRecord
             [['date_appearance', 'date_fall'], 'safe'],
             [['status', 'is_delete'], 'integer'],
             [['eat'], 'number'],
+            [['color'], 'string', 'max' => 50],
         ];
     }
 
@@ -48,6 +50,7 @@ class AppleList extends \yii\db\ActiveRecord
             'status' => 'Status',
             'eat' => 'Eat',
             'is_delete' => 'Is Delete',
+            'color' => 'Color',
         ];
     }
 }
