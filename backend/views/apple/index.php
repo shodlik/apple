@@ -29,20 +29,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+
             'date_appearance',
             'date_fall',
-            'status',
-            'eat',
-            //'is_delete',
-            //'color',
-            //'size',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, AppleList $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                'attribute'=>'status',
+                'value'=>function($model){
+                    return $model->getStatus();
+                }
+
             ],
+            'eat',
+            'color',
+            'size',
+
         ],
     ]); ?>
 

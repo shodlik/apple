@@ -76,8 +76,16 @@ class AppleList extends \yii\db\ActiveRecord
     public function saveRandom(){
         $this->color = $this->getRandomColor();
         $this->date_appearance = $this->randomDateInRange("-1 month");
-        $this->date_fall = $this->randomDateInRange("-10 hour");
         $this->status = $this->getRandomStatus();
+        $this->date_fall = $this->randomDateInRange("-10 hour");
+        if($this->status==self::STATUS_FALL) {
+            $fallAt = new \DateTime($this->date_fall);
+            $hoursOfFall = $fallAt->diff(new \DateTime())->h;
+            if ($hoursOfFall > 5) {
+                $this->status = self::STATUS_ROTTEN;
+            }
+        }
+        $this->size = 1;
         return $this->save();
     }
 
@@ -88,12 +96,25 @@ class AppleList extends \yii\db\ActiveRecord
         return date("Y-m-d H:i:s",$randomTimestamp);
     }
 
+    public function getStatusList(){
+        return [
+          self::STATUS_AT_TREE=>'висит на дереве',
+          self::STATUS_FALL=>'лежит на земле',
+          self::STATUS_ROTTEN=>'гнилое яблоко',
+        ];
+    }
+
+    public function getStatus(){
+        $list = $this->getStatusList();
+        return isset($list[$this->status])?$list[$this->status]:'-';
+    }
+
     public function getRandomStatus(){
-        $fallAt = new \DateTime($this->date_fall);
-        $hoursOfFall = $fallAt->diff(new \DateTime())->h;
-        if ($hoursOfFall > 5) {
-            return self::STATUS_ROTTEN;
-        }
-        return array_rand([self::STATUS_AT_TREE,self::STATUS_FALL,self::STATUS_ROTTEN]);
+
+        $status=[
+            self::STATUS_AT_TREE,
+            self::STATUS_FALL,
+        ];
+        return $status[mt_rand(0, count($status) - 1)];
     }
 }
