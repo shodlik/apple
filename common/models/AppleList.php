@@ -14,6 +14,7 @@ use Yii;
  * @property float|null $eat
  * @property int|null $is_delete
  * @property string|null $color
+ * @property float|null $size
  */
 class AppleList extends \yii\db\ActiveRecord
 {
@@ -33,7 +34,7 @@ class AppleList extends \yii\db\ActiveRecord
         return [
             [['date_appearance', 'date_fall'], 'safe'],
             [['status', 'is_delete'], 'integer'],
-            [['eat'], 'number'],
+            [['eat', 'size'], 'number'],
             [['color'], 'string', 'max' => 50],
         ];
     }
@@ -51,6 +52,7 @@ class AppleList extends \yii\db\ActiveRecord
             'eat' => 'Eat',
             'is_delete' => 'Is Delete',
             'color' => 'Color',
+            'size' => 'Size',
         ];
     }
 }

@@ -18,8 +18,8 @@ class AppleListSearch extends AppleList
     {
         return [
             [['id', 'status', 'is_delete'], 'integer'],
-            [['date_appearance', 'date_fall'], 'safe'],
-            [['eat'], 'number'],
+            [['date_appearance', 'date_fall', 'color'], 'safe'],
+            [['eat', 'size'], 'number'],
         ];
     }
 
@@ -65,7 +65,10 @@ class AppleListSearch extends AppleList
             'status' => $this->status,
             'eat' => $this->eat,
             'is_delete' => $this->is_delete,
+            'size' => $this->size,
         ]);
+
+        $query->andFilterWhere(['like', 'color', $this->color]);
 
         return $dataProvider;
     }
