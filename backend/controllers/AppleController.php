@@ -2,10 +2,8 @@
 
 namespace backend\controllers;
 
-use backend\Apple;
 use common\models\AppleList;
 use common\models\AppleListSearch;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,29 +18,17 @@ class AppleController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index','create'],
-                        'allow' => true,
-                        'roles' => ['@'],
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
                     ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
+            ]
+        );
     }
 
     /**
@@ -81,11 +67,19 @@ class AppleController extends Controller
      */
     public function actionCreate()
     {
-        $count = mt_rand(1, 10);
-        for ($i = 0; $i < $count; $i++) {
+        $model = new AppleList();
 
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
         }
-        return  $this->redirect(\Yii::$app->response->refresh());
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**

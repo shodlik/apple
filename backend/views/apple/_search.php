@@ -27,6 +27,10 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'is_delete') ?>
 
+    <?php // echo $form->field($model, 'color') ?>
+
+    <?php // echo $form->field($model, 'size') ?>
+
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>

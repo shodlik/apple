@@ -35,6 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             'eat',
             'is_delete',
+            'color',
+            'size',
         ],
     ]) ?>
 

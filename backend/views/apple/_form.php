@@ -22,6 +22,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'is_delete')->textInput() ?>
 
+    <?= $form->field($model, 'color')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'size')->textInput(['maxlength' => true]) ?>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
