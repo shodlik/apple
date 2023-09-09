@@ -39,9 +39,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
 
             ],
-            'eat',
             'color',
-            'size',
+            'size:decimal',
+            'eat',
+            [
+                'label'=>'action',
+                'format'=>'raw',
+                'value'=>function($model){
+                    return '<a href="/apple/eat?id='.$model->id.'}" class="btn btn-success shadow-sm">Есть</a> <a href="/apple/fall?id='.$model->id.'}" class="btn btn-primary shadow-sm">Fall</a>';
+                }
+            ]
 
         ],
     ]); ?>

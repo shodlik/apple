@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\AppleList;
 use common\models\AppleListSearch;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -19,17 +20,28 @@ class AppleController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index','create','eat','fall'],
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -76,6 +88,21 @@ class AppleController extends Controller
                 throw new \Exception(Json::encode($apple->getErrors()));
             }
         }
+        $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    public function actionEat($id)
+    {
+        $apple = AppleList::findOne($id);
+        $apple->eat(mt_rand(1,100));
+
+        $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    public function actionFall($id)
+    {
+        $apple = AppleList::findOne($id);
+        $apple->fallToGround();
         $this->redirect(\Yii::$app->request->referrer);
     }
 

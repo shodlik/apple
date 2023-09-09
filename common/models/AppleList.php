@@ -77,8 +77,8 @@ class AppleList extends \yii\db\ActiveRecord
         $this->color = $this->getRandomColor();
         $this->date_appearance = $this->randomDateInRange("-1 month");
         $this->status = $this->getRandomStatus();
-        $this->date_fall = $this->randomDateInRange("-10 hour");
         if($this->status==self::STATUS_FALL) {
+            $this->date_fall = $this->randomDateInRange("-10 hour");
             $fallAt = new \DateTime($this->date_fall);
             $hoursOfFall = $fallAt->diff(new \DateTime())->h;
             if ($hoursOfFall > 5) {
@@ -116,5 +116,44 @@ class AppleList extends \yii\db\ActiveRecord
             self::STATUS_FALL,
         ];
         return $status[mt_rand(0, count($status) - 1)];
+    }
+
+    public function eat($percent)
+    {
+        if ($this->is_delete == 1) {
+            Yii::$app->session->setFlash('error', 'Яблоко было съедено!!!');
+            return false;
+        }
+        if ($this->status == self::STATUS_AT_TREE) {
+            Yii::$app->session->setFlash('error', 'Яблоко на дереве!!!');
+            return false;
+        }
+        $fallAt = new \DateTime($this->date_fall);
+        $hoursOfFall = $fallAt->diff(new \DateTime())->h;
+
+        if ($hoursOfFall > 5 ) {
+            Yii::$app->session->setFlash('error', 'Яблоко гнилое!!!');
+            return false;
+        }
+            $this->eat = $percent;
+            $this->size = $this->size -$this->eat/100;
+            $this->size = ($this->size<0)?0:$this->size;
+
+        if ($this->eat <= 0 || $this->size==0) {
+            $this->is_delete = 1;
+        }
+
+        return $this->save();
+    }
+
+    public function fallToGround()
+    {
+        if ($this->status != self::STATUS_AT_TREE) {
+            Yii::$app->session->setFlash('error', 'Яблоко нsе дереве!!!');
+            return false;
+        }
+        $this->status = self::STATUS_FALL;
+        $this->date_fall = (new \DateTime())->format('Y-m-d H:i:s');
+        return $this->save();
     }
 }
