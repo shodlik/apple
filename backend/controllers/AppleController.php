@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\AppleList;
 use common\models\AppleListSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -67,19 +68,15 @@ class AppleController extends Controller
      */
     public function actionCreate()
     {
-        $model = new AppleList();
+        $count = mt_rand(1, 10);
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        for ($i = 0; $i < $count; $i++) {
+            $apple = new AppleList();
+            if (!$apple->saveRandom()) {
+                throw new \Exception(Json::encode($apple->getErrors()));
             }
-        } else {
-            $model->loadDefaultValues();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $this->redirect(\Yii::$app->request->referrer);
     }
 
     /**

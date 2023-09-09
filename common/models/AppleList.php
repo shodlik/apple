@@ -18,6 +18,10 @@ use Yii;
  */
 class AppleList extends \yii\db\ActiveRecord
 {
+    const STATUS_AT_TREE = 0;
+    const STATUS_FALL    = 10;
+    const STATUS_ROTTEN  = -10;
+
     /**
      * {@inheritdoc}
      */
@@ -54,5 +58,32 @@ class AppleList extends \yii\db\ActiveRecord
             'color' => 'Color',
             'size' => 'Size',
         ];
+    }
+
+    public function getRandomColor()
+    {
+        $colors = [
+            'green',
+            'purple',
+            'yellow',
+        ];
+
+        $rnd = mt_rand(0, count($colors) - 1);
+
+        return $colors[$rnd];
+    }
+
+    public function saveRandom(){
+        $this->color = $this->getRandomColor();
+        $this->date_appearance = $this->randomDateInRange();
+        $this->status = array_rand([self::STATUS_AT_TREE,self::STATUS_FALL,self::STATUS_ROTTEN]);
+        return $this->save();
+    }
+
+    private function randomDateInRange() {
+        $start = strtotime(date("y-m-d",strtotime("-1 month")));
+        $end = strtotime(date("Y-m-d H:i:s"));
+        $randomTimestamp = mt_rand($start, $end);
+        return date("Y-m-d H:i:s",$randomTimestamp);
     }
 }
