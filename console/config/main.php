@@ -18,7 +18,7 @@ return [
     ],
     'controllerMap' => [
         'fixture' => [
-            'class' => \yii\console\controllers\FixtureController::class,
+            'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
           ],
     ],
@@ -26,7 +26,7 @@ return [
         'log' => [
             'targets' => [
                 [
-                    'class' => \yii\log\FileTarget::class,
+                    'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
             ],
